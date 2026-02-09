@@ -6,7 +6,7 @@ This project is the submission for **Practical Application Assignment 11.1 – W
 
 It analyzes a Kaggle used-car dataset (**426K vehicles**) to understand which factors most strongly drive used car prices and to build a supervised regression model for a used-car dealership.
 
-The core deliverable is a **Jupyter notebook** (`prompt_II-2.ipynb`) that walks through the full **CRISP-DM lifecycle** from business understanding to modeling and recommendations.
+The core deliverable is a **Jupyter notebook** (`prompt_II.ipynb`) that walks through the full **CRISP-DM lifecycle** from business understanding to modeling and recommendations.
 
 ---
 
