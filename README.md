@@ -1,177 +1,250 @@
-# whatdrivesthepriceofacar
+# 🚗 What Drives the Price of a Car?
 
-What Drives the Price of a Car?
-Overview
-This project is the submission for Practical Application Assignment 11.1 – What Drives the Price of a Car? in the UC Berkeley / Emeritus ML program. It analyzes a Kaggle used‑car dataset (426K vehicles) to understand which factors most strongly drive used car prices and to build a supervised regression model for a used‑car dealership.
+## Overview
 
-The core deliverable is a Jupyter notebook (prompt_II-2.ipynb) that walks through the full CRISP‑DM lifecycle from business understanding to modeling and recommendations.
+This project is the submission for **Practical Application Assignment 11.1 – What Drives the Price of a Car?** in the UC Berkeley / Emeritus ML program.
 
-Repository structure
-prompt_II.ipynb – main notebook with CRISP‑DM analysis and models
+It analyzes a Kaggle used-car dataset (**426K vehicles**) to understand which factors most strongly drive used car prices and to build a supervised regression model for a used-car dealership.
 
-data/vehicles.csv (not tracked here; provided via course platform) – raw used‑car data
+The core deliverable is a **Jupyter notebook** (`prompt_II-2.ipynb`) that walks through the full **CRISP-DM lifecycle** from business understanding to modeling and recommendations.
 
-README.md – project description and usage instructions
+---
 
-Note: Place vehicles.csv in a data/ folder at the repo root or adjust the notebook path accordingly.
+## 📁 Repository Structure
 
-Problem statement
-A used‑car dealership wants to know what consumers value most in a used car and how to price inventory more accurately. From a data perspective, this is framed as:
+```
+.
+├── prompt_II.ipynb           # Main notebook with CRISP-DM analysis and models
+├── data/
+│   └── vehicles.csv          # Raw used-car data (426K vehicles)
+│                             # Note: Not tracked; provided via course platform
+└── README.md                 # Project description and usage instructions
+```
 
-A supervised regression problem where the target is the continuous variable price.
+⚠️ **Setup Note:** Place `vehicles.csv` in a `data/` folder at the repo root or adjust the notebook path accordingly.
 
-Features include vehicle attributes such as year, manufacturer, model, condition, odometer, fuel, transmission, drive, and others.
+---
 
-Business goals:
+## 🎯 Problem Statement
 
-Identify the key drivers of used‑car price.
+A used-car dealership wants to:
+- Know what consumers value most in a used car
+- Price inventory more accurately
 
-Build a model with R² ≥ 0.75 on a held‑out test set and reasonable MAE.
+### Framing as a Data Problem
 
-Provide actionable recommendations to the dealership for acquisition and pricing.
+**Type:** Supervised Regression
+- **Target:** Continuous variable `price`
+- **Features:** Vehicle attributes (year, manufacturer, model, condition, odometer, fuel, transmission, drive, etc.)
 
-Methodology (CRISP‑DM)
-Business understanding
-Reframed the dealership’s question as a regression task predicting price from vehicle features.
+### Business Goals
 
-Defined key questions (top price drivers, price ranges by vehicle type/condition, presence of non‑obvious factors).
+1. ✅ Identify the **key drivers** of used-car price
+2. ✅ Build a model with **R² ≥ 0.75** on held-out test set and reasonable MAE
+3. ✅ Provide **actionable recommendations** to dealership for acquisition and pricing
 
-Set success metrics: R², MAE, and interpretability for business stakeholders.
+---
 
-Data understanding
-Loaded vehicles.csv and performed initial EDA:
+## 🔄 Methodology (CRISP-DM)
 
-Shape, schema, data types, summary statistics.
+### 1. Business Understanding
 
-Missing values and duplicate analysis.
+- Reframed dealership's question as a regression task predicting price from vehicle features
+- Defined key questions:
+  - What are the top price drivers?
+  - What are price ranges by vehicle type/condition?
+  - Are there non-obvious factors affecting price?
+- Set success metrics: **R²**, **MAE**, and **interpretability** for business stakeholders
 
-Outlier detection for price.
+### 2. Data Understanding
 
-Visualizations:
+Loaded `vehicles.csv` and performed initial **Exploratory Data Analysis (EDA)**:
 
-Price distribution.
+- **Schema Analysis:** Shape, data types, summary statistics
+- **Data Quality:** Missing values and duplicate analysis
+- **Outlier Detection:** Focus on price outliers and invalid entries
+- **Visualizations:**
+  - Price distribution (histogram)
+  - Price vs. year (boxplots by year)
+  - Correlation heatmap for numeric features
+  - Price vs. odometer (scatterplot)
 
-Price vs. year (boxplots).
+### 3. Data Preparation
 
-Correlation heatmap for numeric features.
-
-Price vs. odometer scatterplot.
-
-Data preparation
 Key preparation steps:
 
-Filtered out invalid or extreme price values and removed duplicates.
+1. **Filtering:** Removed invalid or extreme price values and duplicates
+2. **Feature Selection:** Selected relevant features and engineered vehicle age from year
+3. **Missing Values:** 
+   - Dropped high-missing columns
+   - Imputed remaining numeric/categorical fields
+4. **Encoding:** Applied label encoding and one-hot encoding as appropriate
+5. **Scaling:** Scaled numeric features
+6. **Train/Test Split:** 80/20 split with proper random state
 
-Selected a subset of relevant features and engineered vehicle age from year.
+### 4. Modeling
 
-Handled missing values (dropping high‑missing columns and imputing remaining numeric/categorical fields).
+Trained and evaluated multiple models:
 
-Encoded categorical variables (label encoding and one‑hot encoding as appropriate).
+| Model | Train R² | Test R² | MAE | RMSE | Training Time |
+|-------|----------|---------|-----|------|---------------|
+| Linear Regression | Baseline | Baseline | - | - | Fast |
+| Random Forest | - | **Meets Target** | - | - | Moderate |
+| Gradient Boosting | - | - | - | - | Moderate |
 
-Scaled numeric features.
+**Winner:** Random Forest Regressor (best trade-off between accuracy and interpretability)
 
-Split data into train/test sets (80/20).
+#### Evaluation Metrics
 
-Modeling
-The notebook trains and evaluates several models:
+For each model, reported:
+- Train and test R²
+- MAE and RMSE
+- Training time
+- Feature importance / coefficients
 
-Baseline Linear Regression
+### 5. Model Diagnostics
 
-Random Forest Regressor
+- **Feature Importance Plot** (Random Forest) – rank most influential variables
+- **Coefficient Table** – qualitative interpretation for linear regression
+- **Predicted vs. Actual** – scatterplot to visually assess fit
+- **5-Fold Cross-Validation** – verify stability and performance variance
 
-Gradient Boosting Regressor
+---
 
-For each model, the notebook reports:
+## 💡 Key Findings
 
-Train and test R²
+From modeling and feature importance analysis, the **main drivers of used-car price** are:
 
-MAE and RMSE
+1. **Vehicle Age / Year** 🚗
+   - Newer vehicles command substantially higher prices
+   - ~$X per year (from model coefficients)
 
-Training time
+2. **Odometer Reading** 📊
+   - Lower mileage strongly associated with higher price
+   - ~$X per 1,000 miles (from model)
 
-The Random Forest model achieved the best trade‑off between accuracy and interpretability, meeting the target R² threshold on the test set.
+3. **Drive Type** 🏎️
+   - Certain configurations (e.g., 4WD/AWD) tend to increase price
+   - Premium for AWD/4WD vs. FWD
 
-Model diagnostics
-Feature importance plot (Random Forest) to rank the most influential variables.
+4. **Fuel Type** ⛽
+   - Some fuel types (e.g., gas vs. diesel/electric) carry premiums
+   - Local demand heavily influences this factor
 
-Coefficient table and qualitative interpretation for linear regression.
+5. **Model/Manufacturer & Other Attributes** 🏷️
+   - Specific makes/models command price premiums
+   - Transmission type, condition also contribute meaningfully
 
-Predicted vs. actual price scatterplot to visually assess model fit.
+**Communicated via:** Plots and narrative geared toward non-technical dealership audience in the notebook.
 
-5‑fold cross‑validation for key models to check stability and variance of performance.
+---
 
-Key findings
-From the modeling and feature importance analysis, the main drivers of used‑car price include:
+## 📋 Recommendations for the Dealership
 
-Vehicle age / year – newer vehicles command substantially higher prices.
+### 1. Inventory Acquisition Strategy
 
-Odometer – lower mileage is strongly associated with higher price.
+✓ Prioritize newer, low-mileage vehicles  
+✓ Focus on popular manufacturers and models  
+✓ Favor configurations with higher-value drive/fuel types where local demand supports premium  
+✓ Track seasonality and regional preferences
 
-Drive type – certain drive configurations (e.g., 4WD/AWD) tend to increase price.
+### 2. Pricing Strategy
 
-Fuel type – some fuel types (e.g., gas vs. others) carry pricing premiums.
+✓ Use trained **Random Forest model** as a pricing decision-support tool  
+✓ Provide recommended price ranges for new trade-ins and auction purchases  
+✓ Apply discounts for high-mileage or older vehicles beyond identified thresholds  
+✓ Monitor market volatility and adjust model predictions accordingly
 
-Model/manufacturer and selected categorical attributes (transmission, condition) also contribute meaningfully.
+### 3. Ongoing Model Improvement
 
-These findings are communicated in the notebook with plots and narrative geared toward a non‑technical dealership audience.
+✓ **Periodically retrain** with recent sales data to capture market evolution  
+✓ Explore additional features:
+   - Regional effects and local market variations
+   - Seasonality patterns
+   - More granular condition metrics
+   - Service history and accident reports
+✓ Monitor model drift and revalidate performance quarterly
 
-Recommendations for the dealership
-Based on the analysis:
+---
 
-Inventory acquisition
+## 🚀 How to Run the Notebook
 
-Prioritize newer, low‑mileage vehicles, especially in popular manufacturers and models.
+### Step 1: Clone the Repository
 
-Favor configurations with higher‑value drive and fuel types where local demand supports the premium.
-
-Pricing strategy
-
-Use the trained Random Forest model as a pricing decision‑support tool, providing recommended price ranges for new trade‑ins and auction purchases.
-
-Apply discounts for high‑mileage or older vehicles beyond typical thresholds identified in the data.
-
-Ongoing model improvement
-
-Periodically retrain the model with recent sales data to capture changing market conditions.
-
-Explore additional features (e.g., regional effects, seasonality, more granular condition metrics) to further improve accuracy.
-
-How to run the notebook
-Clone the repository:
-
-bash
+```bash
 git clone https://github.com/ramjagan/whatdrivesthepriceofacar.git
 cd whatdrivesthepriceofacar
-Ensure vehicles.csv is available, for example in data/vehicles.csv.
+```
 
-Create and activate a Python environment (optional but recommended).
+### Step 2: Prepare Data
 
-Install dependencies (typical stack: pandas, numpy, scikit-learn, matplotlib, seaborn, scipy):
+Ensure `vehicles.csv` is available in `data/vehicles.csv`
 
-bash
+### Step 3: Set Up Environment (Recommended)
+
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+### Step 4: Install Dependencies
+
+```bash
 pip install -r requirements.txt
-or manually:
-pip install pandas numpy scikit-learn matplotlib seaborn scipy
+```
 
-Launch Jupyter:
+**Or manually install:**
 
-bash
+```bash
+pip install pandas numpy scikit-learn matplotlib seaborn scipy jupyter
+```
+
+### Step 5: Launch Jupyter and Run
+
+```bash
 jupyter notebook
-Open prompt_II.ipynb and run all cells in order.
+```
 
-Requirements
-Python 3.9+
+Open `prompt_II.ipynb` and run all cells in order.
 
-Libraries:
+---
 
-pandas
+## 📦 Requirements
 
-numpy
+**Python Version:** 3.9+
 
-scikit-learn
+**Core Libraries:**
 
-matplotlib
+- `pandas` – Data manipulation and analysis
+- `numpy` – Numerical computing
+- `scikit-learn` – Machine learning models and evaluation
+- `matplotlib` – Static plotting and visualization
+- `seaborn` – Statistical data visualization
+- `scipy` – Scientific computing (stats, optimization)
+- `jupyter` – Interactive notebooks
 
-seaborn
+---
 
-scipy
+## 📄 Files
+
+- **`prompt_II.ipynb`** – Complete CRISP-DM analysis with all code and visualizations
+- **`data/vehicles.csv`** – Raw dataset (426K vehicles, not tracked in repo)
+- **`README.md`** – This file
+
+---
+
+## 🎓 Course Context
+
+**Program:** UC Berkeley / Emeritus ML Program  
+**Assignment:** Practical Application 11.1  
+**Focus:** Supervised Regression + CRISP-DM Methodology
+
+---
+
+## 📧 Contact & Questions
+
+For questions or issues, please open an issue in the GitHub repository.
+
+---
+
+*Last Updated: February 2026*
