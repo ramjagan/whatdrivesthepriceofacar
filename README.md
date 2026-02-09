@@ -180,6 +180,38 @@ cd whatdrivesthepriceofacar
 
 Ensure `vehicles.csv` is available in `data/vehicles.csv`
 
+#### Update Notebook Data Path (Important! ⚠️)
+
+Since the CSV file is in the `data/` folder, you must update the data loading path in the notebook:
+
+**In the notebook cell that loads the data, find:**
+
+```python
+df = pd.read_csv('vehicles.csv')
+```
+
+**And replace it with:**
+
+```python
+df = pd.read_csv('data/vehicles.csv')
+```
+
+**Or use the more robust cross-platform approach:**
+
+```python
+import os
+csv_path = os.path.join('data', 'vehicles.csv')
+df = pd.read_csv(csv_path)
+```
+
+**For modern Python (Pathlib - Recommended):**
+
+```python
+from pathlib import Path
+csv_path = Path('data') / 'vehicles.csv'
+df = pd.read_csv(csv_path)
+```
+
 ### Step 3: Set Up Environment (Recommended)
 
 ```bash
